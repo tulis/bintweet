@@ -1,6 +1,8 @@
 {
+    "editor.formatOnSave": true,
+    "python.autoComplete.addBrackets": true,
+    "python.formatting.provider": "black",
     "python.linting.flake8Enabled": true,
     "python.linting.mypyEnabled": true,
-    "python.autoComplete.addBrackets": true,
-    "editor.formatOnSave": true
+    "python.sortImports.path": "isort"
 }
