@@ -6,6 +6,7 @@
     "python.linting.mypyEnabled": true,
     "python.sortImports.path": "isort",
     "cSpell.words": [
+        "bintweet",
         "tweepy"
     ]
 }
