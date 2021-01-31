@@ -1,7 +1,7 @@
 = Building, Debugging and Testing on Ubuntu (WSL)
 
 == Pre-requisite
-* Install python version >= 3.8
+* Install `python` version `>= 3.8`
 +
 ```
 sudo apt-get update
@@ -20,22 +20,22 @@ python3 -m pip install --user pipx
 python3 -m pipx ensurepath
 ```
 +
-Running pipx ensurepath includes pipx in your PATH variable. In other words, this makes sure that entering pipx by itself will find the right executable.
+Running `pipx ensurepath` includes `pipx` in your `PATH` variable. In other words, this makes sure that entering `pipx` by itself will find the right executable.
 +
 https://dev.to/bowmanjd/how-do-i-install-a-python-command-line-tool-or-script-hint-pipx-3i2
-* Install poetry
+* Install `poetry`
 +
 ```
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
 ```
-* Enable auto-completion for Oh-My-Zsh
+* Enable auto-completion for `Oh-My-Zsh`
 +
 ```
 mkdir $ZSH_CUSTOM/plugins/poetry
 poetry completions zsh > $ZSH_CUSTOM/plugins/poetry/_poetry
 ```
 +
-Edit .zshrc and add `poetry` into `plugins(...)`
+Edit `.zshrc` and add `poetry` into `plugins(...)`
 +
 ```
 plugins(
@@ -64,8 +64,9 @@ poetry add new-package --dev
 ```
 * Remove existing package
 +
+```
 poetry remove existing-package
-+
+```
 * Remove existing package from the development dependencies
 +
 ```
