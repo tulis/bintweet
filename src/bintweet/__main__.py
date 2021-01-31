@@ -66,7 +66,9 @@ def main(
     print(f"[{now}] authentication is successful.")
     print(f"[{now}] screen name: {me.screen_name}")
 
-    regex = re.compile(fr"#in(?P<{NUMBER}>\d)(?P<{UNIT}>[hdms])")
+    regex = re.compile(
+        fr"#in(?P<{NUMBER}>\d)(?P<{UNIT}>[{UNIT_DAYS}{UNIT_HOUR}{UNIT_MINUTE}{UNIT_SECONDS}])"
+    )
 
     for hashtag in hashtags:
         print(f"[{now}] hashtag: {hashtag}")
