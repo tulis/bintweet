@@ -14,8 +14,8 @@ NUMBER_MAX_SECONDS = 60 * NUMBER_MAX_MINUTES
 
 UNIT = "unit"
 UNIT_DAYS = "d"
-UNIT_HOUR = "h"
-UNIT_MINUTE = "m"
+UNIT_HOURS = "h"
+UNIT_MINUTES = "m"
 UNIT_SECONDS = "s"
 
 
@@ -67,7 +67,7 @@ def main(
     print(f"[{now}] screen name: {me.screen_name}")
 
     regex = re.compile(
-        fr"#in(?P<{NUMBER}>\d)(?P<{UNIT}>[{UNIT_DAYS}{UNIT_HOUR}{UNIT_MINUTE}{UNIT_SECONDS}])"
+        fr"#in(?P<{NUMBER}>\d)(?P<{UNIT}>[{UNIT_DAYS}{UNIT_HOURS}{UNIT_MINUTES}{UNIT_SECONDS}])"
     )
 
     for hashtag in hashtags:
@@ -85,7 +85,7 @@ def main(
                 number = int(result.groupdict()[NUMBER])
                 unit = result.groupdict()[UNIT]
 
-                if unit == UNIT_HOUR:
+                if unit == UNIT_HOURS:
                     if number > NUMBER_MAX_HOURS:
                         number = NUMBER_MAX_HOURS
 
@@ -107,7 +107,7 @@ def main(
                         api.destroy_status(tweet.id)
 
                     continue
-                elif unit == UNIT_MINUTE:
+                elif unit == UNIT_MINUTES:
                     if number > NUMBER_MAX_MINUTES:
                         number = NUMBER_MAX_MINUTES
 
