@@ -55,6 +55,7 @@ tasks:
             - ls -halF $HOME/.poetry/bin
             - export PATH="$HOME/.poetry/bin:$PATH"
             - source $HOME/.poetry/env
+            - echo $PATH
             - task: poetry-use-python3-as-default
             #- echo {{.SKIP_INSTALL_PYTHON3}}
             #- echo "install poetry in progress....."
