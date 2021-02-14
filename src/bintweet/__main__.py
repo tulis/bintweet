@@ -1,6 +1,6 @@
 from __future__ import annotations
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
+from loguru import logger
 import fire
 import re
 import tweepy
@@ -56,22 +56,22 @@ def main(
     """
 
     now = datetime.now()
-    print(f"[{now}] bintweet starting...")
-    print(f"[{now}] authenticating...")
+    logger.info(f"bintweet starting...")
+    logger.info(f"authenticating...")
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
     me = api.me()
 
-    print(f"[{now}] authentication is successful.")
-    print(f"[{now}] screen name: {me.screen_name}")
+    logger.info(f"authentication is successful.")
+    logger.info(f"screen name: {me.screen_name}")
 
     regex = re.compile(
         fr"#in(?P<{NUMBER}>\d)(?P<{UNIT}>[{UNIT_DAYS}{UNIT_HOURS}{UNIT_MINUTES}{UNIT_SECONDS}])"
     )
 
     for hashtag in hashtags:
-        print(f"[{now}] hashtag: {hashtag}")
+        logger.info(f"hashtag: {hashtag}")
         public_tweets = tweepy.Cursor(
             api.search,
             q=f"{hashtag} (from:{me.screen_name})",
@@ -92,7 +92,7 @@ def main(
                     removeDateTime = tweet.created_at + timedelta(hours=number)
 
                     if now > removeDateTime:
-                        print(f"[{now}] remove tweet {tweet.id}")
+                        logger.info(f"remove tweet {tweet.id}")
                         api.destroy_status(tweet.id)
 
                     continue
@@ -103,7 +103,7 @@ def main(
                     removeDateTime = tweet.created_at + timedelta(days=number)
 
                     if now > removeDateTime:
-                        print(f"[{now}] remove tweet {tweet.id}")
+                        logger.info(f"remove tweet {tweet.id}")
                         api.destroy_status(tweet.id)
 
                     continue
@@ -116,7 +116,7 @@ def main(
                     )
 
                     if now > removeDateTime:
-                        print(f"[{now}] remove tweet {tweet.id}")
+                        logger.info(f"remove tweet {tweet.id}")
                         api.destroy_status(tweet.id)
 
                     continue
@@ -129,7 +129,7 @@ def main(
                     )
 
                     if now > removeDateTime:
-                        print(f"[{now}] remove tweet {tweet.id}")
+                        logger.info(f"remove tweet {tweet.id}")
                         api.destroy_status(tweet.id)
 
                     continue
@@ -138,7 +138,7 @@ def main(
             removeDateTime = tweet.created_at + timedelta(days=NUMBER_MAX_DAYS)
 
             if now > removeDateTime:
-                print(f"[{now}] remove tweet {tweet.id}")
+                logger.info(f"remove tweet {tweet.id}")
                 api.destroy_status(tweet.id)
 
 
