@@ -1,0 +1,24 @@
+name: run
+
+on:
+    schedule:
+        - cron: "0 * * * *"
+
+jobs:
+    run:
+        name: ubuntu-latest
+        runs-on: ubuntu-latest
+        steps:
+            # - name: Set up Go 1.15
+            #   uses: actions/setup-go@v2
+            #   with:
+            #       go-version: ^1.15
+
+            - name: Checkout bintweet repository
+              uses: actions/checkout@v2
+
+            - name: Setup go-task
+              run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
+
+            - name: Run bintweet
+              run: ./bin/task run
