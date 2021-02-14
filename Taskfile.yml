@@ -2,7 +2,69 @@ version: "3"
 
 dotenv: [".env"]
 
+vars:
+    POETRY_CONFIG_PATH:
+        sh: echo '~/.poetry/bin/poetry'
+    PYTHON3_SHE_BANG:
+        sh: echo '#!/usr/bin/env python3'
+    PYTHON_VERSION:
+        sh: echo "$(python --version 2>&1)"
+    PYTHON3_VERSION:
+        sh: echo "$(python3 --version 2>&1)"
+    IS_PYTHON3_DEFAULT:
+        sh: echo '{{ (hasPrefix "Python 3" .PYTHON_VERSION) }}'
+    SKIP_INSTALL_PYTHON3:
+        sh: echo '{{ (hasPrefix "Python 3" .PYTHON_VERSION) | ternary "true" (hasPrefix "Python 3" .PYTHON3_VERSION) }}'
+    SKIP_INSTALL_POETRY:
+        sh: test -n "$(poetry --version)" && echo "true" || echo "false"
+
 tasks:
-    run:
+    install-python:
         cmds:
-            - poetry run python3 src/bintweet $CONSUMER_KEY $CONSUMER_SECRET $ACCESS_TOKEN $ACCESS_TOKEN_SECRET
+            - sudo apt-get update | yes
+            - sudo apt-get upgrade | yes
+            - sudo apt-get install python3 | yes
+            - sudo apt-get install -y python3-pip | yes
+            - python3 -m pip install --user pipx | yes
+            - python3 -m pipx ensurepath | yes
+
+        status:
+            - ( [[ {{ .SKIP_INSTALL_PYTHON3 }} = "true" ]] )
+
+    poetry-use-python3-as-default:
+        cmds:
+            - sed -i -e '1i{{.PYTHON3_SHE_BANG}}' {{.POETRY_CONFIG_PATH}}
+            #- echo "Set poetry to use python 3 as default... "
+
+        status:
+            - |
+                ( [[ {{.IS_PYTHON3_DEFAULT}} = true ]] ) \
+                || ( ( [[ {{.SKIP_INSTALL_PYTHON3}} = true ]] ) \
+                && test -n "$( grep -Fx '{{.PYTHON3_SHE_BANG}}' {{.POETRY_CONFIG_PATH}} 2>&1 )" )
+
+        preconditions:
+            - |
+                ( [[ {{.IS_PYTHON3_DEFAULT}} = true ]] ) \
+                || ( ( [[ {{.SKIP_INSTALL_PYTHON3}} = true ]] ) \
+                && test -e ~/.poetry/bin/poetry )
+
+    install-poetry:
+        cmds:
+            - task: install-python
+            - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+            - task: poetry-use-python3-as-default
+            #- echo {{.SKIP_INSTALL_PYTHON3}}
+            #- echo "install poetry in progress....."
+
+        status:
+            - ( [[ {{ .SKIP_INSTALL_POETRY }} = "true" ]] )
+
+    run:
+        deps: [install-poetry]
+        cmds:
+            - |
+                poetry run python3 src/bintweet \
+                  $CONSUMER_KEY \
+                  $CONSUMER_SECRET \
+                  $ACCESS_TOKEN \
+                  $ACCESS_TOKEN_SECRET
