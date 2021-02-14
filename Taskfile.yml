@@ -64,6 +64,7 @@ tasks:
     run:
         deps: [install-poetry]
         cmds:
+            - poetry install
             - |
                 poetry run python3 src/bintweet \
                   $CONSUMER_KEY \
