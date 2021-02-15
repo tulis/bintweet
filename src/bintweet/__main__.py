@@ -131,6 +131,7 @@ def main(
             result_type="recent",
         )
 
+        tweet: tweepy.Status
         for tweet in public_tweets.items():
             result = regex.search(tweet.text)
 
