@@ -28,6 +28,31 @@ config = {
     **dotenv_values(".env.secret"),  # load sensitive variables
 }
 
+
+def loguru_format(record):
+    format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | \
+<level>{level: <8}</level> | \
+<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}\n{exception}</level>"
+
+    if record["extra"].get("sensitive") and not bool(
+        strtobool(config.get(DEBUG) or "FALSE")
+    ):
+        omit_fields = []
+        for field in record["extra"]:
+            if field == "sensitive":
+                continue
+            else:
+                omit_fields.append(record["extra"][field])
+
+        record["message"] = re.sub(
+            "|".join(re.escape(omit_field) for omit_field in omit_fields),
+            "***redacted***",
+            record["message"],
+        )
+
+    return format
+
+
 logger.configure(
     handlers=[
         dict(
@@ -35,6 +60,7 @@ logger.configure(
             diagnose=True
             if bool(strtobool(config.get(DEBUG) or "FALSE"))
             else False,
+            format=loguru_format,
         ),
     ],
 )
@@ -86,7 +112,11 @@ def main(
     me = api.me()
 
     logger.info(f"authentication is successful.")
-    logger.info(f"screen name: {me.screen_name}")
+    logger.bind(sensitive=True).info(
+        "screen name: {screen_name}",
+        screen_name=me.screen_name,
+        name=me.name,
+    )
 
     regex = re.compile(
         fr"#in(?P<{NUMBER}>\d)(?P<{UNIT}>[{UNIT_DAYS}{UNIT_HOURS}{UNIT_MINUTES}{UNIT_SECONDS}])"
