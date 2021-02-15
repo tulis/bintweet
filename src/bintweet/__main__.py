@@ -1,8 +1,11 @@
 from __future__ import annotations
 from datetime import datetime, timedelta
+from distutils.util import strtobool
+from dotenv import dotenv_values
 from loguru import logger
 import fire
 import re
+import sys
 import tweepy
 
 
@@ -18,7 +21,26 @@ UNIT_HOURS = "h"
 UNIT_MINUTES = "m"
 UNIT_SECONDS = "s"
 
+DEBUG = "DEBUG"
 
+config = {
+    **dotenv_values(".env"),  # load shared development variables
+    **dotenv_values(".env.secret"),  # load sensitive variables
+}
+
+logger.configure(
+    handlers=[
+        dict(
+            sink=sys.stdout,
+            diagnose=True
+            if bool(strtobool(config.get(DEBUG) or "FALSE"))
+            else False,
+        ),
+    ],
+)
+
+
+@logger.catch
 def main(
     consumer_key: str,
     consumer_secret: str,
