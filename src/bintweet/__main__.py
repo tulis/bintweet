@@ -4,6 +4,7 @@ from distutils.util import strtobool
 from dotenv import dotenv_values
 from loguru import logger
 import fire
+import loguru
 import re
 import sys
 import tweepy
@@ -29,7 +30,7 @@ config = {
 }
 
 
-def loguru_format(record):
+def loguru_format(record: loguru.Record):
     format = "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | \
 <level>{level: <8}</level> | \
 <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}\n{exception}</level>"
