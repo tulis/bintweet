@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 
 import typing
 
-_DEBUG = "DEBUG"
+DEBUG = "DEBUG"
 
 T = typing.TypeVar("T")
 
@@ -19,4 +19,4 @@ def get(key: str, default: (typing.Any | T) = None) -> (typing.Any | T):
 
 
 def is_debug_mode() -> bool:
-    return bool(strtobool(_config.get(_DEBUG) or "FALSE"))
+    return bool(strtobool(_config.get(DEBUG) or "FALSE"))

@@ -29,11 +29,19 @@ def loguru_format(record: loguru.Record):
     return format
 
 
+def log_level(record: loguru.Record) -> bool:
+
+    if not config.is_debug_mode() and record["level"].name == config.DEBUG:
+        return False
+    return True
+
+
 logger.configure(
     handlers=[
         dict(
             sink=sys.stdout,
             diagnose=True if config.is_debug_mode() else False,
+            filter=log_level,
             format=loguru_format,
         ),
     ],

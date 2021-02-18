@@ -96,7 +96,7 @@ def main(
 
         for tweet in response.get("data") or []:
             result = regex.search(tweet["text"])
-            logger.info(tweet["id"])
+            logger.debug(tweet["id"])
 
             if result:
                 number = int(result.groupdict()[NUMBER])
