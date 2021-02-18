@@ -1,11 +1,14 @@
 from __future__ import annotations
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from distutils.util import strtobool
 from dotenv import dotenv_values
 from loguru import logger
+
 import fire
+import iso8601
 import loguru
 import re
+import requests
 import sys
 import tweepy
 
@@ -73,6 +76,7 @@ def main(
     consumer_secret: str,
     access_token: str,
     access_token_secret: str,
+    bearer_token: str,
     hashtags: frozenset[str] = frozenset(
         [
             "binit",
@@ -99,12 +103,15 @@ def main(
         access_token_secret (str):
             Twitter access token secret key.
             Get from https://developer.twitter.com/en/portal/projects.
+        bearer_token (str):
+            Twitter bearer token.
+            Get from https://developer.twitter.com/en/portal/projects.
         hashtags (frozenset[str]):
             A set of distinct hashtag that will be used to
             indicate which tweets to be removed (bin).
     """
 
-    now = datetime.now()
+    utcnow = datetime.now(timezone.utc)
     logger.info(f"bintweet starting...")
     logger.info(f"authenticating...")
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -125,15 +132,18 @@ def main(
 
     for hashtag in hashtags:
         logger.info(f"hashtag: {hashtag}")
-        public_tweets = tweepy.Cursor(
-            api.search,
-            q=f"{hashtag} (from:{me.screen_name})",
-            result_type="recent",
-        )
 
-        tweet: tweepy.Status
-        for tweet in public_tweets.items():
-            result = regex.search(tweet.text)
+        query = f"query={hashtag} (from:{me.screen_name})"
+        tweet_fields = "tweet.fields=text,created_at"
+        max_results = "max_results=100"
+
+        url = f"https://api.twitter.com/2/tweets/search/recent?{query}&{tweet_fields}&{max_results}"
+        headers = {"Authorization": "Bearer {}".format(bearer_token)}
+        response = requests.request("GET", url, headers=headers).json()
+
+        for tweet in response.get("data") or []:
+            result = regex.search(tweet["text"])
+            logger.info(tweet["id"])
 
             if result:
                 number = int(result.groupdict()[NUMBER])
@@ -143,57 +153,63 @@ def main(
                     if number > NUMBER_MAX_HOURS:
                         number = NUMBER_MAX_HOURS
 
-                    removeDateTime = tweet.created_at + timedelta(hours=number)
+                    removeDateTime = iso8601.parse_date(
+                        tweet["created_at"]
+                    ) + timedelta(hours=number)
 
-                    if now > removeDateTime:
-                        logger.info(f"remove tweet {tweet.id}")
-                        api.destroy_status(tweet.id)
+                    if utcnow > removeDateTime:
+                        logger.info(f"remove tweet {tweet['id']}")
+                        api.destroy_status(tweet["id"])
 
                     continue
                 elif unit == UNIT_DAYS:
                     if number > NUMBER_MAX_DAYS:
                         number = NUMBER_MAX_DAYS
 
-                    removeDateTime = tweet.created_at + timedelta(days=number)
+                    removeDateTime = iso8601.parse_date(
+                        tweet["created_at"]
+                    ) + timedelta(days=number)
 
-                    if now > removeDateTime:
-                        logger.info(f"remove tweet {tweet.id}")
-                        api.destroy_status(tweet.id)
+                    if utcnow > removeDateTime:
+                        logger.info(f"remove tweet {tweet['id']}")
+                        api.destroy_status(tweet["id"])
 
                     continue
                 elif unit == UNIT_MINUTES:
                     if number > NUMBER_MAX_MINUTES:
                         number = NUMBER_MAX_MINUTES
 
-                    removeDateTime = tweet.created_at + timedelta(
-                        minutes=number
-                    )
+                    removeDateTime = iso8601.parse_date(
+                        tweet["created_at"]
+                    ) + timedelta(minutes=number)
 
-                    if now > removeDateTime:
-                        logger.info(f"remove tweet {tweet.id}")
-                        api.destroy_status(tweet.id)
+                    if utcnow > removeDateTime:
+                        logger.info(f"remove tweet {tweet['id']}")
+                        api.destroy_status(tweet["id"])
 
                     continue
                 elif unit == UNIT_SECONDS:
                     if number > NUMBER_MAX_SECONDS:
                         number = NUMBER_MAX_SECONDS
 
-                    removeDateTime = tweet.created_at + timedelta(
-                        seconds=number
-                    )
+                    removeDateTime = iso8601.parse_date(
+                        tweet["created_at"]
+                    ) + timedelta(seconds=number)
 
-                    if now > removeDateTime:
-                        logger.info(f"remove tweet {tweet.id}")
-                        api.destroy_status(tweet.id)
+                    if utcnow > removeDateTime:
+                        logger.info(f"remove tweet {tweet['id']}")
+                        api.destroy_status(tweet["id"])
 
                     continue
 
             # TODO check if tweets is older than 5 days
-            removeDateTime = tweet.created_at + timedelta(days=NUMBER_MAX_DAYS)
+            removeDateTime = iso8601.parse_date(
+                tweet["created_at"]
+            ) + timedelta(days=NUMBER_MAX_DAYS)
 
-            if now > removeDateTime:
-                logger.info(f"remove tweet {tweet.id}")
-                api.destroy_status(tweet.id)
+            if utcnow > removeDateTime:
+                logger.info(f"remove tweet {tweet['id']}")
+                api.destroy_status(tweet["id"])
 
 
 if __name__ == "__main__":
