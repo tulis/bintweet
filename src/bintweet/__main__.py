@@ -120,7 +120,7 @@ def main(
     )
 
     regex = re.compile(
-        fr"#in(?P<{NUMBER}>\d)(?P<{UNIT}>[{UNIT_DAYS}{UNIT_HOURS}{UNIT_MINUTES}{UNIT_SECONDS}])"
+        fr"#after(?P<{NUMBER}>\d)(?P<{UNIT}>[{UNIT_DAYS}{UNIT_HOURS}{UNIT_MINUTES}{UNIT_SECONDS}])"
     )
 
     for hashtag in hashtags:
