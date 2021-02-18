@@ -1,5 +1,4 @@
 from __future__ import annotations
-from distutils.util import strtobool
 from loguru import logger
 
 import config
@@ -13,9 +12,7 @@ def loguru_format(record: loguru.Record):
 <level>{level: <8}</level> | \
 <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}\n{exception}</level>"
 
-    if record["extra"].get("sensitive") and not bool(
-        strtobool(config.get(config.DEBUG) or "FALSE")
-    ):
+    if record["extra"].get("sensitive") and not config.is_debug_mode():
         omit_fields = []
         for field in record["extra"]:
             if field == "sensitive":
@@ -36,9 +33,7 @@ logger.configure(
     handlers=[
         dict(
             sink=sys.stdout,
-            diagnose=True
-            if bool(strtobool(config.get(config.DEBUG) or "FALSE"))
-            else False,
+            diagnose=True if config.is_debug_mode() else False,
             format=loguru_format,
         ),
     ],
