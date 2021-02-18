@@ -74,9 +74,7 @@ def main(
 
     logger.info(f"authentication is successful.")
     logger.bind(sensitive=True).info(
-        "screen name: {screen_name}",
-        screen_name=me.screen_name,
-        name=me.name,
+        "screen name: {screen_name}", screen_name=me.screen_name
     )
 
     regex = re.compile(
