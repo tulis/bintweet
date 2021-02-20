@@ -9,6 +9,12 @@ If `go get` command does not work, try following appending `GO111MODULE=on` as d
 ```
 $ GO111MODULE=on go get github.com/go-task/task/v3/cmd/task
 ```
++
+On https://github.com/golang/go/issues/35321[Windows]:
+```
+> set GO111MODULE=on
+> go get github.com/go-task/task/v3/cmd/task
+```
 
 == Useful built-in task commands
 * https://taskfile.dev/#/usage?id=help[To see all tasks define in `Taskfile.yml`]

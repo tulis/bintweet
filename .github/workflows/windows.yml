@@ -8,6 +8,7 @@ jobs:
     run:
         env:
             GO111MODULE: on
+            GOPATH: "C:\\hostedtoolcache\\windows\\go"
         name: windows-compile
         runs-on: windows-latest
         steps:
