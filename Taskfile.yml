@@ -17,6 +17,10 @@ vars:
         sh: echo '{{ (hasPrefix "Python 3" .PYTHON_VERSION) | ternary "true" (hasPrefix "Python 3" .PYTHON3_VERSION) }}'
     SKIP_INSTALL_POETRY:
         sh: test -n "$(poetry --version)" && echo "true" || echo "false"
+    OUTPUT_DIRECTORY:
+        sh: echo "dist"
+    BINARY_FILE_NAME:
+        sh: echo "bintweetapps"
 
 tasks:
     install-python:
@@ -72,3 +76,32 @@ tasks:
                   $ACCESS_TOKEN \
                   $ACCESS_TOKEN_SECRET \
                   $BEARER_TOKEN
+
+    compile:
+        deps: [install-poetry]
+        cmds:
+            - poetry install
+            - |
+                poetry run python3 -m nuitka \
+                  --follow-imports \
+                  --plugin-enable=pylint-warnings \
+                  -o {{.BINARY_FILE_NAME}} \
+                  --output-dir={{.OUTPUT_DIRECTORY}} \
+                  --remove-output \
+                  src/bintweet/__main__.py
+            - mv {{.BINARY_FILE_NAME}} dist/
+
+    run-binary:
+        cmds:
+            - |
+                ./{{.OUTPUT_DIRECTORY}}/{{.BINARY_FILE_NAME}} \
+                  $CONSUMER_KEY \
+                  $CONSUMER_SECRET \
+                  $ACCESS_TOKEN \
+                  $ACCESS_TOKEN_SECRET \
+                  $BEARER_TOKEN
+        preconditions:
+            - sh: test -f "{{.OUTPUT_DIRECTORY}}/{{.BINARY_FILE_NAME}}"
+              msg: |
+                  [{{.BINARY_FILE_NAME}}] executable file does not exist in [{{.OUTPUT_DIRECTORY}}] folder.
+                        Please run `task compile` to generate a single executable file.
