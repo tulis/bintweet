@@ -35,11 +35,11 @@ jobs:
             - name: Setup poetry
               uses: Gr1N/setup-poetry@v4
 
-            # - name: Run bintweet
-            #   run: ./bin/task run
-            #   env:
-            #       CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
-            #       CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
-            #       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-            #       ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-            #       BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+            - name: Run bintweet
+              run: "& \"$env:GOPATH\\bin\\task\" run"
+              env:
+                  CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+                  CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
+                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+                  BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}

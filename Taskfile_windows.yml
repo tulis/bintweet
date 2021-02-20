@@ -1,0 +1,26 @@
+﻿version: "3"
+
+tasks:
+    install-python:
+        cmds:
+            - echo "Please install python 3.9 (or above) from Windows Store."
+
+        status:
+            - ( [[ {{ .SKIP_INSTALL_PYTHON3 }} = "true" ]] )
+
+    poetry-use-python3-as-default:
+        cmds:
+            - sed -i -e '1i{{.PYTHON3_SHE_BANG}}' {{.POETRY_CONFIG_PATH}}
+            #- echo "Set poetry to use python 3 as default... "
+
+        status:
+            - |
+                ( [[ {{.IS_PYTHON3_DEFAULT}} = true ]] ) \
+                || ( ( [[ {{.SKIP_INSTALL_PYTHON3}} = true ]] ) \
+                && test -n "$( grep -Fx '{{.PYTHON3_SHE_BANG}}' {{.POETRY_CONFIG_PATH}} 2>&1 )" )
+
+        preconditions:
+            - |
+                ( [[ {{.IS_PYTHON3_DEFAULT}} = true ]] ) \
+                || ( ( [[ {{.SKIP_INSTALL_PYTHON3}} = true ]] ) \
+                && test -e ~/.poetry/bin/poetry )
