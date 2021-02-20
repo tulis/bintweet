@@ -235,6 +235,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "nuitka"
+version = "0.6.12.2"
+description = "Python compiler with full language support and CPython compatibility"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "oauthlib"
 version = "3.1.0"
 description = "A generic, spec-compliant, thorough implementation of the OAuth request-signing logic"
@@ -517,7 +525,7 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "decb2d16024031bf564b0f05c1a23f2364bcc2223fb5afe0f8b20f2fb0b56f81"
+content-hash = "9d9e7bb646379ada7850b649c932624a865a26f0a54a7c0c17e71f288b84ce54"
 
 [metadata.files]
 appdirs = [
@@ -629,6 +637,9 @@ mypy-extensions = [
 nodeenv = [
     {file = "nodeenv-1.5.0-py2.py3-none-any.whl", hash = "sha256:5304d424c529c997bc888453aeaa6362d242b6b4631e90f3d4bf1b290f1c84a9"},
     {file = "nodeenv-1.5.0.tar.gz", hash = "sha256:ab45090ae383b716c4ef89e690c41ff8c2b257b85b309f01f3654df3d084bd7c"},
+]
+nuitka = [
+    {file = "Nuitka-0.6.12.2.tar.gz", hash = "sha256:faf02c07ded85e2703b912eab8250a53cc4fe7469b1e17a8dc134d08274ba226"},
 ]
 oauthlib = [
     {file = "oauthlib-3.1.0-py2.py3-none-any.whl", hash = "sha256:df884cd6cbe20e32633f1db1072e9356f53638e4361bef4e8b03c9127c9328ea"},
