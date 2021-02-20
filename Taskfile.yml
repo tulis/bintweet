@@ -66,6 +66,8 @@ tasks:
             - ( [[ {{ .SKIP_INSTALL_POETRY }} = "true" ]] )
 
     run:
+        desc: Run the python program via poetry.
+        summary: It is mostly used during development or performing debugging.
         deps: [install-poetry]
         cmds:
             - poetry install
@@ -78,6 +80,10 @@ tasks:
                   $BEARER_TOKEN
 
     compile:
+        desc: Compile the python program into a single executable file.
+        summary: |
+            * The binary file (.exe) is for Windows while (.bin) is for Linux.
+            * The output binary file is located inside [{{.BINARY_FILE_NAME}}] folder.
         deps: [install-poetry]
         cmds:
             - poetry install
@@ -90,8 +96,11 @@ tasks:
                   --remove-output \
                   src/bintweet/__main__.py
             - mv {{.BINARY_FILE_NAME}} dist/
+            - echo "Binary file is located at [{{.OUTPUT_DIRECTORY}}/{{.BINARY_FILE_NAME}}]."
+            - echo "To run the binary file, type command [task run-binary]."
 
     run-binary:
+        desc: Run the single executable file as a result of calling [task compile].
         cmds:
             - |
                 ./{{.OUTPUT_DIRECTORY}}/{{.BINARY_FILE_NAME}} \
