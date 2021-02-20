@@ -1,0 +1,31 @@
+﻿version: "3"
+
+tasks:
+    install-python:
+        cmds:
+            - sudo apt-get update | yes
+            - sudo apt-get upgrade | yes
+            - sudo apt-get install python3 | yes
+            - sudo apt-get install -y python3-pip | yes
+            - python3 -m pip install --user pipx | yes
+            - python3 -m pipx ensurepath | yes
+
+        status:
+            - ( [[ {{ .SKIP_INSTALL_PYTHON3 }} = "true" ]] )
+
+    poetry-use-python3-as-default:
+        cmds:
+            - sed -i -e '1i{{.PYTHON3_SHE_BANG}}' {{.POETRY_CONFIG_PATH}}
+            #- echo "Set poetry to use python 3 as default... "
+
+        status:
+            - |
+                ( [[ {{.IS_PYTHON3_DEFAULT}} = true ]] ) \
+                || ( ( [[ {{.SKIP_INSTALL_PYTHON3}} = true ]] ) \
+                && test -n "$( grep -Fx '{{.PYTHON3_SHE_BANG}}' {{.POETRY_CONFIG_PATH}} 2>&1 )" )
+
+        preconditions:
+            - |
+                ( [[ {{.IS_PYTHON3_DEFAULT}} = true ]] ) \
+                || ( ( [[ {{.SKIP_INSTALL_PYTHON3}} = true ]] ) \
+                && test -e ~/.poetry/bin/poetry )

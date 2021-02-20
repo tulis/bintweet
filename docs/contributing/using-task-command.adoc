@@ -6,54 +6,64 @@
 +
 If `go get` command does not work, try following appending `GO111MODULE=on` as describe in https://github.com/go-task/task/issues/395#issuecomment-774663843[Why is `go get` not supported?]
 +
-```
+....
 $ GO111MODULE=on go get github.com/go-task/task/v3/cmd/task
-```
+....
 +
 On https://github.com/golang/go/issues/35321[Windows]:
-```
+....
 > set GO111MODULE=on
 > go get github.com/go-task/task/v3/cmd/task
-```
+....
 
 == Useful built-in task commands
 * https://taskfile.dev/#/usage?id=help[To see all tasks define in `Taskfile.yml`]
 +
-```
+....
 $ task --list
-```
+....
 * https://taskfile.dev/#/usage?id=display-summary-of-task[To see the description of a specific task in `Taskfile.yml`]
 +
-```
+....
 $ task --summary task-name
-```
+....
 
 == Python dependencies
 * By default if you <<run>> the python program, the task will also install `python` and `poetry`.
 * However if you want to install `python` and `poetry` explicitly, type following commands:
 +
-```
-$ task install-python
-$ task install-poetry
-```
+....
+$ task file:install-python
+$ task file:install-poetry
+....
++
+For each Operating System platform, installing python and poetry have their own distinct way. That's why we call the task using prefix `file:`.
++
+.Taskfile.yml
+....
+includes:
+    file: ./Taskfile_{{OS}}.yml
+....
++
+For more information on calling tasks from other `Taskfiles`, go to https://taskfile.dev/\#/usage?id=including-other-taskfiles[Including other Taskfiles] and https://taskfile.dev/\#/usage?id=os-specific-taskfiles[os-specific-taskfiles].
 
 == Run
 * To run the python program during development:
 +
-```
+....
 $ task run
-```
+....
 
 == Compile and Package
 * To compile the python program into a single executable file (.exe) or (.bin):
 +
-```
+....
 $ task compile
-```
+....
 +
 Binary output is located at `dist` folder with a file name called `bintweetapp`.
 * To run the single executable file:
 +
-```
+....
 $ task run-binary
-```
+....
