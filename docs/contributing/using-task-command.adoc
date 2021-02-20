@@ -1,0 +1,53 @@
+﻿= Using `task` command
+
+== Pre-requisite
+* https://golang.org/doc/install[Install `go`] at least version 1.15.
+* https://github.com/go-task/task[Install `go-task`] using https://taskfile.dev/#/installation?id=build-from-source[`go get`] command.
++
+If `go get` command does not work, try following appending `GO111MODULE=on` as describe in https://github.com/go-task/task/issues/395#issuecomment-774663843[Why is `go get` not supported?]
++
+```
+$ GO111MODULE=on go get github.com/go-task/task/v3/cmd/task
+```
+
+== Useful built-in task commands
+* https://taskfile.dev/#/usage?id=help[To see all tasks define in `Taskfile.yml`]
++
+```
+$ task --list
+```
+* https://taskfile.dev/#/usage?id=display-summary-of-task[To see the description of a specific task in `Taskfile.yml`]
++
+```
+$ task --summary task-name
+```
+
+== Python dependencies
+* By default if you <<run>> the python program, the task will also install `python` and `poetry`.
+* However if you want to install `python` and `poetry` explicitly, type following commands:
++
+```
+$ task install-python
+$ task install-poetry
+```
+
+== Run
+* To run the python program during development:
++
+```
+$ task run
+```
+
+== Compile and Package
+* To compile the python program into a single executable file (.exe) or (.bin):
++
+```
+$ task compile
+```
++
+Binary output is located at `dist` folder with a file name called `bintweetapp`.
+* To run the single executable file:
++
+```
+$ task run-binary
+```
