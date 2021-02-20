@@ -32,8 +32,8 @@ jobs:
             - name: Verify go-task is installed
               run: "& \"$env:GOPATH\\bin\\task\" --version"
 
-            # - name: Setup poetry
-            #   uses: Gr1N/setup-poetry@v4
+            - name: Setup poetry
+              uses: Gr1N/setup-poetry@v4
 
             # - name: Run bintweet
             #   run: ./bin/task run
