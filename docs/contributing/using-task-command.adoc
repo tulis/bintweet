@@ -4,13 +4,14 @@
 * https://golang.org/doc/install[Install `go`] at least version 1.15.
 * https://github.com/go-task/task[Install `go-task`] using https://taskfile.dev/#/installation?id=build-from-source[`go get`] command.
 +
-If `go get` command does not work, try following appending `GO111MODULE=on` as describe in https://github.com/go-task/task/issues/395#issuecomment-774663843[Why is `go get` not supported?]
+If `go get` command does not work, try following appending `GO111MODULE=on` as described in https://github.com/go-task/task/issues/395#issuecomment-774663843[Why is `go get` not supported?]
 +
 ....
 $ GO111MODULE=on go get github.com/go-task/task/v3/cmd/task
 ....
 +
 On https://github.com/golang/go/issues/35321[Windows]:
++
 ....
 > set GO111MODULE=on
 > go get github.com/go-task/task/v3/cmd/task
