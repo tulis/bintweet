@@ -1,4 +1,6 @@
-﻿= Using `task` command
+:source-highlighter: rouge
+
+= Using `task` command
 
 == Pre-requisite
 * https://golang.org/doc/install[Install `go`] at least version 1.15.
@@ -41,6 +43,7 @@ $ task file:install-poetry
 For each Operating System platform, installing python and poetry have their own distinct way. That's why we call the task using prefix `file:`.
 +
 .Taskfile.yml
+[source,yml]
 ....
 includes:
     file: ./Taskfile_{{OS}}.yml
