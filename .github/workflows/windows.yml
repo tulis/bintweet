@@ -1,0 +1,44 @@
+﻿name: windows-compile
+
+on:
+    push:
+    workflow_dispatch:
+
+jobs:
+    run:
+        env:
+            GO111MODULE: on
+        name: windows-compile
+        runs-on: windows-latest
+        steps:
+            # - name: Set up Go 1.15
+            #   uses: actions/setup-go@v2
+            #   with:
+            #       go-version: ^1.15
+
+            - name: Get GOPATH
+              run: (Get-Command go).Path
+
+            - name: Checkout bintweet repository
+              uses: actions/checkout@v2
+
+            - name: set GO111MODULE=on
+              run: set GO111MODULE=on
+
+            - name: Setup go-task
+              run: go get -u github.com/go-task/task/v3/cmd/task
+
+            - name: Verify go-task is installed
+              run: "& \"$env:GOPATH\\bin\\task\" --version"
+
+            # - name: Setup poetry
+            #   uses: Gr1N/setup-poetry@v4
+
+            # - name: Run bintweet
+            #   run: ./bin/task run
+            #   env:
+            #       CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+            #       CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
+            #       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+            #       ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+            #       BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
