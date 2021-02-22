@@ -45,6 +45,8 @@ tasks:
         deps: [install-poetry]
         cmds:
             - poetry --version
+            - poetry env info
+            - poetry env list
             - poetry install
             - |
                 poetry run python3 src/bintweet \
