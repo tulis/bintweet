@@ -44,8 +44,8 @@ tasks:
         summary: It is mostly used during development or performing debugging.
         deps: [install-poetry]
         cmds:
+            - poetry --version
             - poetry install
-            - poetry version
             - |
                 poetry run python3 src/bintweet \
                   $CONSUMER_KEY \
