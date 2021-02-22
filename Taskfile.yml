@@ -45,10 +45,10 @@ tasks:
         deps: [install-poetry]
         cmds:
             - poetry --version
+            - poetry install
             - poetry env info
             - poetry env list
             - poetry config --list
-            - poetry install
             - |
                 poetry run python3 src/bintweet \
                   $CONSUMER_KEY \
