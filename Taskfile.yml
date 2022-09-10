@@ -29,7 +29,7 @@ tasks:
     install-poetry:
         cmds:
             - task: file:install-python
-            - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+            - curl -sSL https://install.python-poetry.org/ | python3 -
             - export PATH="$HOME/.poetry/bin:$PATH"
             - source $HOME/.poetry/env
             - task: file:poetry-use-python3-as-default
