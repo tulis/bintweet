@@ -239,7 +239,7 @@ python-versions = "*"
 
 [[package]]
 name = "nuitka"
-version = "0.6.12.2"
+version = "0.6.19.7"
 description = "Python compiler with full language support and CPython compatibility"
 category = "dev"
 optional = false
