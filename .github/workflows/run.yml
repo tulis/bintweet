@@ -23,7 +23,7 @@ jobs:
               run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
 
             - name: Setup poetry
-              uses: Gr1N/setup-poetry@v4
+              uses: Gr1N/setup-poetry@v7
 
             - name: Run bintweet
               run: ./bin/task run
